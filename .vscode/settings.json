@@ -1,0 +1,45 @@
+{
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "github.copilot.enable": {
+        "*": true
+    },
+    "git.pruneOnFetch": true,
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "teriminal.integrated.profiles.linux": {
+        "zsh": {
+            "path": "/bin/zsh",
+        }
+    },
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "files.autoSaveDelay": 500,
+    "files.autoSave": "afterDelay",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+    },
+    "black-formatter.args": [
+        "--line-length=119"
+    ],
+    "pylint.args": [
+        "--disable=missing-module-docstring,missing-function-docstring,invalid-name,too-few-public-methods,too-many-arguments,missing-class-docstring,broad-exception-caught,too-many-instance-attributes,too-many-locals",
+        "--max-line-length=119",
+        "init-hook='import sys; sys.path.extend(['.','\\iac'])",
+        "--ignore=cdk.out"
+    ],
+    "isort.args": [
+        "--profile=black"
+    ],
+    "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.exclude": [
+        "**/cdk.out/**",
+    ],
+    "python.analysis.autoImportCompletions": true
+}

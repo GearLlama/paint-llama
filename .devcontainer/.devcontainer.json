@@ -1,0 +1,84 @@
+{
+    "name": "Python",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "..",
+        "args": {
+            "VARIANT": "python:3.12.7",
+            "USERNAME": "vscode"
+        }
+    },
+    "remoteUser": "vscode",
+    "mounts": [
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+        "source=projectname-bashhistory,target=/home/vscode/.bash_history,type=volume"
+    ],
+    "workspaceFolder": "${localWorkspaceFolder}",
+    "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
+    "containerEnv": {
+        "AWS_PROFILE": "paint-llama"
+    },
+    "runArgs": [
+        "--cpus=8",
+        "--memory=15g"
+    ],
+    "hostRequirements": {
+        "memory": "15gb",
+        "cpus": 8
+    },
+    "initializeCommand": "mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.ssh && mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
+    "updateContentCommand": "poetry update",
+    "postCreateCommand": "projen --no-post",
+    "postStartCommand": "aws sso login --profile $AWS_PROFILE --no-browser || (echo \"\nERROR: Setup AWS SSO with `${AWS_PROFILE}`.\n\" >&2 && exit 1)",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker": {},
+        "ghcr.io/devcontainers/features/aws-cli:1": {},
+        "ghcr.io/audacioustux/devcontainers/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true,
+            "installOhMyZshConfig": true,
+            "upgradePackages": true,
+            "username": "automatic",
+            "userUid": "automatic",
+            "userGid": "automatic"
+        },
+        "ghcr.io/devcontainers/features/git:1": {
+            "ppa": true,
+            "version": "os-provided"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "installDirectlyFromGitHubRelease": true,
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers-contrib/features/aws-cdk:2": {
+            "version": "2.167.1"
+        },
+        "ghcr.io/devcontainers-contrib/features/projen:1": {},
+        "ghcr.io/devcontainers-contrib/features/poetry:2": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "streetsidesoftware.code-spell-checker",
+                "mhutchie.git-graph",
+                "Github.copilot",
+                "VisualStudioExptTeam.vscodeintellicode",
+                "ms-vsliveshare.vsliveshare",
+                "Github.vscode-pull-request-github",
+                "ms-python.vscode-pylance",
+                "ms-python.python",
+                "ms-python.debugpy",
+                "Boto3typed.boto3-ide",
+                "ms-python.black-formatter",
+                "ms-python.pylint",
+                "ms-python.flake8",
+                "ms-python.isort"
+            ],
+            "settings": {
+                "dev.containers.copyGitConfig": true
+            }
+        }
+    }
+}

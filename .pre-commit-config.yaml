@@ -1,0 +1,50 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+      - id: black
+        args:
+          - --line-length=119
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          [
+            "--disable=missing-module-docstring,missing-function-docstring,invalid-name,too-few-public-methods,too-many-arguments,too-many-positional-arguments,missing-class-docstring,broad-exception-caught,too-many-instance-attributes,too-many-locals,duplicate-code",
+            "--max-line-length=119",
+            "init-hook='import sys; sys.path.extend(['.','\\iac'])",
+            "--ignore=cdk.out"
+          ]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        name: isort (python)
+        args:
+          [
+            "--profile=black",
+          ]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+        args:
+          - --markdown-linebreak-ext=mid
+      - id: check-toml
+      - id: check-yaml
+        args:
+          - --unsafe
+      - id: check-symlinks
+      - id: check-added-large-files
+        args:
+          - --maxkb=500
+      - id: forbid-new-submodules
+      - id: no-commit-to-branch
+        args:
+          - --branch=main
+      - id: detect-private-key

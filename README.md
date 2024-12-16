@@ -1,0 +1,4 @@
+# Initial Setup
+```
+./init.sh
+```
