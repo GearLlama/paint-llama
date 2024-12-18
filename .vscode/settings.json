@@ -30,7 +30,6 @@
     "pylint.args": [
         "--disable=missing-module-docstring,missing-function-docstring,invalid-name,too-few-public-methods,too-many-arguments,missing-class-docstring,broad-exception-caught,too-many-instance-attributes,too-many-locals",
         "--max-line-length=119",
-        "init-hook='import sys; sys.path.extend(['.','\\iac'])",
         "--ignore=cdk.out"
     ],
     "isort.args": [

@@ -18,17 +18,9 @@ root_project = PythonProject(
         "python@3.12.7",
         "projen@0.91.1",
         "iac@{path = 'iac', develop = true}",
+        "simulator@{path = 'simulator', develop = true}",
     ],
-    dev_deps=[
-        "pre-commit",
-        "flake8",
-        "flake8-docstrings",
-        "Flake8-pyproject",
-        "pylint",
-        "mypy",
-        "black",
-        "isort"
-    ],
+    dev_deps=["pre-commit", "flake8", "flake8-docstrings", "Flake8-pyproject", "pylint", "mypy", "black", "isort"],
 )
 root_project.add_git_ignore("**/cdk.out")
 root_project.add_git_ignore("**/.DS_Store")
@@ -75,5 +67,25 @@ root_project.add_task(
     description=f"{TASK_FLAG} Deploy all CDK stacks",
 )
 
+# Simulator Project
+simulator_project = PythonProject(
+    author_name=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    module_name="simulator",
+    name="simulator",
+    version="0.0.0",
+    parent=root_project,
+    outdir="simulator",
+    poetry=True,
+    deps=[
+        "python@3.12.7",
+        "pydantic@^2.9.2",
+        "pydantic-settings@^2.6.1",
+        "pycairo@^1.27.0",
+    ],
+)
+
+
 root_project.synth()
 iac_project.synth()
+simulator_project.synth()

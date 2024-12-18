@@ -24,6 +24,15 @@
         }
       ]
     },
+    "cdk-deploy": {
+      "name": "cdk-deploy",
+      "description": "[PAINT_LLAMA] Deploy all CDK stacks",
+      "steps": [
+        {
+          "exec": "export AWS_PROFILE=paint-llama && cd iac && npx cdk deploy --app 'python app.py' --require-approval never --asset-parallelism --asset-prebuild false --concurrency 10"
+        }
+      ]
+    },
     "clobber": {
       "name": "clobber",
       "description": "hard resets to HEAD of origin and cleans the local repo",
@@ -99,6 +108,15 @@
         }
       ]
     },
+    "lint": {
+      "name": "lint",
+      "description": "[PAINT_LLAMA] Lint all files with pre-commit",
+      "steps": [
+        {
+          "exec": "pre-commit run --all-files"
+        }
+      ]
+    },
     "package": {
       "name": "package",
       "description": "Creates the distribution package",
@@ -131,6 +149,15 @@
       "steps": [
         {
           "exec": "poetry publish -r testpypi"
+        }
+      ]
+    },
+    "synth": {
+      "name": "synth",
+      "description": "[PAINT_LLAMA] Synthesize the project",
+      "steps": [
+        {
+          "exec": "projen --no-post"
         }
       ]
     },

@@ -16,7 +16,6 @@ repos:
           [
             "--disable=missing-module-docstring,missing-function-docstring,invalid-name,too-few-public-methods,too-many-arguments,too-many-positional-arguments,missing-class-docstring,broad-exception-caught,too-many-instance-attributes,too-many-locals,duplicate-code",
             "--max-line-length=119",
-            "init-hook='import sys; sys.path.extend(['.','\\iac'])",
             "--ignore=cdk.out"
           ]
   - repo: https://github.com/pycqa/isort

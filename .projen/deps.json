@@ -1,9 +1,46 @@
 {
   "dependencies": [
     {
+      "name": "black",
+      "type": "devenv"
+    },
+    {
+      "name": "flake8",
+      "type": "devenv"
+    },
+    {
+      "name": "flake8-docstrings",
+      "type": "devenv"
+    },
+    {
+      "name": "Flake8-pyproject",
+      "type": "devenv"
+    },
+    {
+      "name": "isort",
+      "type": "devenv"
+    },
+    {
+      "name": "mypy",
+      "type": "devenv"
+    },
+    {
+      "name": "pre-commit",
+      "type": "devenv"
+    },
+    {
       "name": "projen",
       "version": "0.91.1",
       "type": "devenv"
+    },
+    {
+      "name": "pylint",
+      "type": "devenv"
+    },
+    {
+      "name": "iac",
+      "version": "{path = 'iac', develop = true}",
+      "type": "runtime"
     },
     {
       "name": "projen",
@@ -13,6 +50,11 @@
     {
       "name": "python",
       "version": "3.12.7",
+      "type": "runtime"
+    },
+    {
+      "name": "simulator",
+      "version": "{path = 'simulator', develop = true}",
       "type": "runtime"
     }
   ],
