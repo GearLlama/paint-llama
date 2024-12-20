@@ -89,4 +89,6 @@ iac/*mapping.json
 cdk.context.json
 data/*
 **/.git_diff_cache
+.logs/
+.pkls/
 !/.projenrc.py
