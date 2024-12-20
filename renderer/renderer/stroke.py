@@ -3,21 +3,9 @@ from math import floor
 import cv2
 import numpy as np
 
-# Can't figure out opacity, so leaving for now
-COLORS = {
-    0: (1, 0, 0),
-    1: (0, 1, 0),
-    2: (0, 0, 1),
-}
-
 
 def normal(x: float, width: int):
     return (int)(x * (width - 1) + 0.5)
-
-
-def get_color(c: float) -> Tuple[int, int, int]:
-    floor(c * 3)
-    return COLORS[floor(c * 3)]
 
 
 def draw(
