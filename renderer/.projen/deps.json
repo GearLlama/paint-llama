@@ -1,8 +1,18 @@
 {
   "dependencies": [
     {
-      "name": "pycairo",
-      "version": "^1.27.0",
+      "name": "numpy",
+      "version": "^2.2.0",
+      "type": "runtime"
+    },
+    {
+      "name": "opencv-python",
+      "version": "^4.10.0.84",
+      "type": "runtime"
+    },
+    {
+      "name": "Pillow",
+      "version": "^11.0.0",
       "type": "runtime"
     },
     {
@@ -18,6 +28,21 @@
     {
       "name": "python",
       "version": "3.12.7",
+      "type": "runtime"
+    },
+    {
+      "name": "scipy",
+      "version": "^1.14.1",
+      "type": "runtime"
+    },
+    {
+      "name": "tensorboard",
+      "version": "^2.18.0",
+      "type": "runtime"
+    },
+    {
+      "name": "torch",
+      "version": "2.5.1",
       "type": "runtime"
     },
     {

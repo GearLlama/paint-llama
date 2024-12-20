@@ -18,7 +18,7 @@ root_project = PythonProject(
         "python@3.12.7",
         "projen@0.91.1",
         "iac@{path = 'iac', develop = true}",
-        "simulator@{path = 'simulator', develop = true}",
+        "renderer@{path = 'renderer', develop = true}",
     ],
     dev_deps=["pre-commit", "flake8", "flake8-docstrings", "Flake8-pyproject", "pylint", "mypy", "black", "isort"],
 )
@@ -29,6 +29,8 @@ root_project.add_git_ignore("iac/*mapping.json")
 root_project.add_git_ignore("cdk.context.json")
 root_project.add_git_ignore("data/*")
 root_project.add_git_ignore("**/.git_diff_cache")
+root_project.add_git_ignore(".logs/")
+root_project.add_git_ignore(".pkls/")
 root_project.add_task(
     "lint",
     exec="pre-commit run --all-files",
@@ -67,25 +69,29 @@ root_project.add_task(
     description=f"{TASK_FLAG} Deploy all CDK stacks",
 )
 
-# Simulator Project
-simulator_project = PythonProject(
+# Renderer
+renderer_project = PythonProject(
     author_name=AUTHOR,
     author_email=AUTHOR_EMAIL,
-    module_name="simulator",
-    name="simulator",
+    module_name="renderer",
+    name="renderer",
     version="0.0.0",
     parent=root_project,
-    outdir="simulator",
+    outdir="renderer",
     poetry=True,
     deps=[
         "python@3.12.7",
         "pydantic@^2.9.2",
         "pydantic-settings@^2.6.1",
-        "pycairo@^1.27.0",
+        "numpy@^2.2.0",
+        "opencv-python@^4.10.0.84",
+        "torch@2.5.1",
+        "scipy@^1.14.1",
+        "Pillow@^11.0.0",
+        "tensorboard@^2.18.0",
     ],
 )
 
-
 root_project.synth()
 iac_project.synth()
-simulator_project.synth()
+renderer_project.synth()

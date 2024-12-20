@@ -53,8 +53,8 @@
       "type": "runtime"
     },
     {
-      "name": "simulator",
-      "version": "{path = 'simulator', develop = true}",
+      "name": "renderer",
+      "version": "{path = 'renderer', develop = true}",
       "type": "runtime"
     }
   ],

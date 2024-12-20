@@ -15,8 +15,8 @@ readme = "README.md"
     path = "iac"
     develop = true
 
-    [tool.poetry.dependencies.simulator]
-    path = "simulator"
+    [tool.poetry.dependencies.renderer]
+    path = "renderer"
     develop = true
 
 [tool.poetry.group.dev.dependencies]
