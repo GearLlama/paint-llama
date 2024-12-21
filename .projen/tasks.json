@@ -152,6 +152,33 @@
         }
       ]
     },
+    "renderer:monitor": {
+      "name": "renderer:monitor",
+      "description": "[PAINT_LLAMA] Monitor the training process",
+      "steps": [
+        {
+          "exec": "tensorboard --logdir=.logs/renderer"
+        }
+      ]
+    },
+    "renderer:test": {
+      "name": "renderer:test",
+      "description": "[PAINT_LLAMA] Run the tests",
+      "steps": [
+        {
+          "exec": "python -m pytest renderer/tests"
+        }
+      ]
+    },
+    "renderer:train": {
+      "name": "renderer:train",
+      "description": "[PAINT_LLAMA] Train the model",
+      "steps": [
+        {
+          "exec": "python renderer/renderer/train.py"
+        }
+      ]
+    },
     "synth": {
       "name": "synth",
       "description": "[PAINT_LLAMA] Synthesize the project",

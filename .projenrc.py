@@ -85,11 +85,27 @@ renderer_project = PythonProject(
         "pydantic-settings@^2.6.1",
         "numpy@^2.2.0",
         "opencv-python@^4.10.0.84",
-        "torch@2.5.1",
         "scipy@^1.14.1",
         "Pillow@^11.0.0",
+        "torch@2.5.1",
+        "tensorboardX@^2.6.2.2",
         "tensorboard@^2.18.0",
     ],
+)
+root_project.add_task(
+    "renderer:monitor",
+    exec="tensorboard --logdir=.logs/renderer",
+    description=f"{TASK_FLAG} Monitor the training process",
+)
+root_project.add_task(
+    "renderer:train",
+    exec="python renderer/renderer/train.py",
+    description=f"{TASK_FLAG} Train the model",
+)
+root_project.add_task(
+    "renderer:test",
+    exec="python -m pytest renderer/tests",
+    description=f"{TASK_FLAG} Run the tests",
 )
 
 root_project.synth()

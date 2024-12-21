@@ -16,6 +16,7 @@ readme = "README.md"
   python = "3.12.7"
   scipy = "^1.14.1"
   tensorboard = "^2.18.0"
+  tensorboardX = "^2.6.2.2"
   torch = "2.5.1"
 
 [tool.poetry.group.dev.dependencies]

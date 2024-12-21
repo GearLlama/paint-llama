@@ -1,19 +1,21 @@
 import os
-import torch
-import numpy as np
+import time
 
+import numpy as np
+import torch
 import torch.nn as nn
 import torch.optim as optim
+
 from renderer.tensorboard import TensorBoard
-from renderer.model import FCN
+from renderer.model import StrokeFCN
 from renderer.stroke import draw
 
-LOGS_DIR = os.path.join(os.path.dirname(__file__), ".logs/renderer/train")
-PKL_PATH = os.path.join(os.path.dirname(__file__), ".pkls/renderer/renderer.pkl")
+LOGS_DIR = os.path.join(os.path.dirname(__file__), f"../../.logs/renderer/train/{str(int(time.time()))}")
+PKL_PATH = os.path.join(os.path.dirname(__file__), "../../.pkls/renderer/renderer.pkl")
 BATCH_SIZE = 64
 
 
-def save_model(net: FCN, use_cuda: bool) -> None:
+def save_model(net: StrokeFCN, use_cuda: bool) -> None:
     if use_cuda:
         net.cpu()
     torch.save(net.state_dict(), PKL_PATH)
@@ -21,7 +23,7 @@ def save_model(net: FCN, use_cuda: bool) -> None:
         net.cuda()
 
 
-def load_weights(net: FCN) -> None:
+def load_weights(net: StrokeFCN) -> None:
     pretrained_dict = torch.load(PKL_PATH)
     model_dict = net.state_dict()
     pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
@@ -35,7 +37,7 @@ def train() -> None:
 
     # Initialize training
     criterion = nn.MSELoss()
-    net = FCN()
+    net = StrokeFCN()
     optimizer = optim.Adam(net.parameters(), lr=3e-6)
 
     # Determine if CUDA is available
@@ -45,7 +47,7 @@ def train() -> None:
     # Try to load weights
     try:
         load_weights(net)
-    except:
+    except:  # pylint: disable=bare-except
         print("No pretrained model found")
 
     # Train
@@ -57,7 +59,7 @@ def train() -> None:
 
         # Generate training set for batch
         for i in range(BATCH_SIZE):
-            f = np.random.uniform(0, 1, 7)
+            f = np.random.uniform(0, 1, 6)
             train_batch.append(f)
             ground_truth.append(draw(f))
 
@@ -72,12 +74,13 @@ def train() -> None:
         # Generate predictions
         gen = net(train_batch)
 
-        # # Calculate loss
+        # Calculate loss
         optimizer.zero_grad()
         loss = criterion(gen, ground_truth)
         loss.backward()
         optimizer.step()
-        print("Step loss", step, loss.item())
+        if step % 10 == 0:
+            print("Step loss", step, loss.item())
 
         if step < 200000:
             lr = 1e-4
@@ -88,20 +91,21 @@ def train() -> None:
         for param_group in optimizer.param_groups:
             param_group["lr"] = lr
 
-        # ?Why are we saving train loss every step?
-        writer.add_scalar("train/loss", loss.item(), step)
-
-        # ?Why are we inferencing every 100?
+        # ?Why are we saving train loss every step? - reducing to 100
         if step % 100 == 0:
+            writer.add_scalar("train/loss", loss.item(), step)
+
+        # ?Why are we inferencing every 100? - reducing to 500
+        if step % 500 == 0:
             net.eval()
             gen = net(train_batch)
             loss = criterion(gen, ground_truth)
             writer.add_scalar("val/loss", loss.item(), step)
-            for i in range(int(BATCH_SIZE / 2)):
-                G = gen[i].cpu().data.numpy()
-                GT = ground_truth[i].cpu().data.numpy()
-                writer.add_image("train/gen{}.png".format(i), G, step)
-                writer.add_image("train/ground_truth{}.png".format(i), GT, step)
+            i = 0
+            G = gen[i].cpu().data.numpy()
+            GT = ground_truth[i].cpu().data.numpy()
+            writer.add_image(f"train/gen{str(i)}.png", G, step)
+            writer.add_image(f"train/ground_truth{str(i)}.png", GT, step)
 
         # Save every 1000
         if step % 1000 == 0:
@@ -109,3 +113,7 @@ def train() -> None:
 
         # Increment step
         step += 1
+
+
+if __name__ == "__main__":
+    train()
