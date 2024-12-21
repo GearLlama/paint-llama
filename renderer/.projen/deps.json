@@ -41,6 +41,11 @@
       "type": "runtime"
     },
     {
+      "name": "tensorboardX",
+      "version": "^2.6.2.2",
+      "type": "runtime"
+    },
+    {
       "name": "torch",
       "version": "2.5.1",
       "type": "runtime"
