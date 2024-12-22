@@ -12,28 +12,36 @@ Additionally, the code is refactored to match patterns preferred by the author. 
 ./init.sh
 ```
 
-# Update Project Structure
+# General Usage
+
+### Activate environment
+```
+poetry shell
+```
+
+### Update project structure
 ```
 projen synth
 ```
 
-# Update Dependencies
+### Update dependencies
 ```
 projen
 ```
 
-# Renderer Commands
-Run renderer tests
+# Renderer
+
+### Run renderer tests
 ```
 projen renderer:test
 ```
 
-Start a tensorboard server to monitor a training job
+### Start a tensorboard server to monitor a training job
 ```
 projen renderer:monitor
 ```
 
-Execute a training job
+### Execute a training job
 ```
 projen renderer:train
 ```

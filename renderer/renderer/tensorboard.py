@@ -1,3 +1,5 @@
+"""Tensorboard monitoring setup."""
+
 from tensorboardX import SummaryWriter
 import numpy as np
 

@@ -19,6 +19,7 @@ root_project = PythonProject(
         "projen@0.91.1",
         "iac@{path = 'iac', develop = true}",
         "renderer@{path = 'renderer', develop = true}",
+        "rl_painter@{path = 'rl_painter', develop = true}",
     ],
     dev_deps=["pre-commit", "flake8", "flake8-docstrings", "Flake8-pyproject", "pylint", "mypy", "black", "isort"],
 )
@@ -108,6 +109,20 @@ root_project.add_task(
     description=f"{TASK_FLAG} Run the tests",
 )
 
+# rl_painter
+rl_painter_project = PythonProject(
+    author_name=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    module_name="rl_painter",
+    name="rl_painter",
+    version="0.0.0",
+    parent=root_project,
+    outdir="rl_painter",
+    poetry=True,
+    deps=["python@3.12.7", "pydantic@^2.9.2", "pydantic-settings@^2.6.1"],
+)
+
 root_project.synth()
 iac_project.synth()
 renderer_project.synth()
+rl_painter_project.synth()

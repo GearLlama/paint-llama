@@ -19,6 +19,10 @@ readme = "README.md"
     path = "renderer"
     develop = true
 
+    [tool.poetry.dependencies.rl_painter]
+    path = "rl_painter"
+    develop = true
+
 [tool.poetry.group.dev.dependencies]
 black = "*"
 flake8 = "*"

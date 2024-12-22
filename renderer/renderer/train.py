@@ -1,3 +1,5 @@
+"""Train neural renderer using strke drawing function."""
+
 import os
 import time
 

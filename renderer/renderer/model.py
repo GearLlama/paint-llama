@@ -1,10 +1,12 @@
+"""Stroke neural network model."""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 
 class StrokeFCN(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super(StrokeFCN, self).__init__()
         self.fc1 = nn.Linear(in_features=6, out_features=512)
         self.fc2 = nn.Linear(in_features=512, out_features=1024)
@@ -18,7 +20,7 @@ class StrokeFCN(nn.Module):
         self.conv6 = nn.Conv2d(in_channels=8, out_channels=4, kernel_size=3, stride=1, padding=1)
         self.pixel_shuffle = nn.PixelShuffle(upscale_factor=2)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = F.relu(self.fc3(x))
