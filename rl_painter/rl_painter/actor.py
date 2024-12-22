@@ -95,7 +95,7 @@ class ActorResNet(nn.Module):
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
         self.fc = nn.Linear(512 * block.expansion, num_outputs)
 
-    def _make_layer(self, block, planes, num_blocks, stride):
+    def _make_layer(self, block: nn.Module, planes: int, num_blocks: int, stride: int) -> nn.Sequential:
         strides = [stride] + [1] * (num_blocks - 1)
         layers = []
 

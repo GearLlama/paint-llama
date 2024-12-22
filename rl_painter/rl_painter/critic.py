@@ -4,9 +4,6 @@ import torch
 import torch.nn as nn
 import torch.nn.utils.weight_norm as weight_norm
 
-from torch.autograd import Variable
-import sys
-
 
 def conv3x3(in_planes: int, out_planes: int, stride: int = 1) -> nn.Conv2d:
     return nn.Conv2d(
@@ -42,22 +39,28 @@ def get_resnet_block_config(depth: int) -> Tuple[nn.Module, List[int]]:
 class BasicBlock(nn.Module):
     expansion = 1
 
-    def __init__(self, in_planes: int, planes: int, stride=1):
+    def __init__(self, in_planes: int, planes: int, stride: int = 1) -> None:
         super(BasicBlock, self).__init__()
         self.conv1 = conv3x3(in_planes, planes, stride)
         self.conv2 = conv3x3(planes, planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
-            self.shortcut = nn.Sequential(
-                weight_norm(
-                    nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=True)
-                ),  # pylint disable=not-callable type: ignore
+            self.shortcut = nn.Sequential(  # type: ignore
+                weight_norm(  # pylint: disable=not-callable # type: ignore
+                    nn.Conv2d(
+                        in_planes,
+                        self.expansion * planes,
+                        kernel_size=1,
+                        stride=stride,
+                        bias=True,
+                    )
+                ),
             )
         self.relu_1 = TReLU()
         self.relu_2 = TReLU()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.relu_1(self.conv1(x))
         out = self.conv2(out)
         out += self.shortcut(x)
@@ -69,22 +72,30 @@ class BasicBlock(nn.Module):
 class Bottleneck(nn.Module):
     expansion = 4
 
-    def __init__(self, in_planes, planes, stride=1):
+    def __init__(self, in_planes: int, planes: int, stride: int = 1) -> None:
         super(Bottleneck, self).__init__()
-        self.conv1 = weightNorm(nn.Conv2d(in_planes, planes, kernel_size=1, bias=True))
-        self.conv2 = weightNorm(nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=True))
-        self.conv3 = weightNorm(nn.Conv2d(planes, self.expansion * planes, kernel_size=1, bias=True))
+        self.conv1 = weight_norm(  # pylint: disable=not-callable # type: ignore
+            nn.Conv2d(in_planes, planes, kernel_size=1, bias=True)
+        )
+        self.conv2 = weight_norm(  # pylint: disable=not-callable # type: ignore
+            nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=True)
+        )
+        self.conv3 = weight_norm(  # pylint: disable=not-callable # type: ignore
+            nn.Conv2d(planes, self.expansion * planes, kernel_size=1, bias=True)
+        )
         self.relu_1 = TReLU()
         self.relu_2 = TReLU()
         self.relu_3 = TReLU()
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
-            self.shortcut = nn.Sequential(
-                weightNorm(nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=True)),
+            self.shortcut = nn.Sequential(  # type: ignore
+                weight_norm(  # pylint: disable=not-callable # type: ignore
+                    nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=True)
+                ),
             )
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.relu_1(self.conv1(x))
         out = self.relu_2(self.conv2(out))
         out = self.conv3(out)
@@ -94,12 +105,12 @@ class Bottleneck(nn.Module):
         return out
 
 
-class ResNet_wobn(nn.Module):
-    def __init__(self, num_inputs, depth, num_outputs):
-        super(ResNet_wobn, self).__init__()
+class CriticResNet(nn.Module):
+    def __init__(self, num_inputs: int, depth: int, num_outputs: int) -> None:
+        super(CriticResNet, self).__init__()
         self.in_planes = 64
 
-        block, num_blocks = cfg(depth)
+        block, num_blocks = get_resnet_block_config(depth)
 
         self.conv1 = conv3x3(num_inputs, 64, 2)
         self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=2)
@@ -109,7 +120,7 @@ class ResNet_wobn(nn.Module):
         self.fc = nn.Linear(512 * block.expansion, num_outputs)
         self.relu_1 = TReLU()
 
-    def _make_layer(self, block, planes, num_blocks, stride):
+    def _make_layer(self, block: nn.Module, planes: int, num_blocks: int, stride: int) -> nn.Sequential:
         strides = [stride] + [1] * (num_blocks - 1)
         layers = []
 
@@ -119,13 +130,13 @@ class ResNet_wobn(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.relu_1(self.conv1(x))
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
-        x = F.avg_pool2d(x, 4)
+        x = nn.functional.avg_pool2d(x, 4)  # pylint: disable=not-callable # type: ignore
         x = x.view(x.size(0), -1)
         x = self.fc(x)
         return x

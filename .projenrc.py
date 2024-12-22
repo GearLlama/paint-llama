@@ -119,7 +119,16 @@ rl_painter_project = PythonProject(
     parent=root_project,
     outdir="rl_painter",
     poetry=True,
-    deps=["python@3.12.7", "pydantic@^2.9.2", "pydantic-settings@^2.6.1"],
+    deps=[
+        "python@3.12.7",
+        "pydantic@^2.9.2",
+        "pydantic-settings@^2.6.1",
+        "numpy@^2.2.0",
+        "opencv-python@^4.10.0.84",
+        "scipy@^1.14.1",
+        "Pillow@^11.0.0",
+        "torch@2.5.1",
+    ],
 )
 
 root_project.synth()
