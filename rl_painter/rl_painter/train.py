@@ -29,7 +29,7 @@ VALIDATE_EPISODES = 5
 TRAIN_TIMES = 2000000
 EPISODE_TRAIN_TIMES = 10
 RESUME: Optional[str] = None
-DEBUG = False
+DEBUG = True
 SEED = 1234
 
 
@@ -49,6 +49,7 @@ def train(agent: AgentDDPG, env: FastPaintEnvironment, evaluator: Evaluator, wri
 
     # Start training
     while step <= train_times:
+        print("running step ", step)
         step += 1
         episode_steps += 1
 

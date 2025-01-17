@@ -55,8 +55,10 @@ class AgentDDPG:
         self.env_batch = env_batch
         self.batch_size = batch_size
 
-        self.actor = ActorResNet(9, 18, 65)  # target, canvas, stepnum, coordconv 3 + 3 + 1 + 2
-        self.actor_target = ActorResNet(9, 18, 65)
+        self.actor = ActorResNet(
+            9, 18, 45
+        )  # target, canvas, stepnum, coordconv 3 + 3 + 1 + 2, # 45 was reverse engineered from previous code due to 9 params instead of 13
+        self.actor_target = ActorResNet(9, 18, 45)
         self.critic = CriticResNet(3 + 9, 18, 1)  # add the last canvas for better prediction
         self.critic_target = CriticResNet(3 + 9, 18, 1)
 
@@ -90,6 +92,7 @@ class AgentDDPG:
     @staticmethod
     def get_default_coord(device) -> torch.Tensor:
         # TODO: Add type hints
+        # What are default coords?
         coord = torch.zeros([1, 2, 128, 128])
         for ix in range(128):
             for iy in range(128):

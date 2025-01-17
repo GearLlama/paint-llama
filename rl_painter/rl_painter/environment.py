@@ -46,7 +46,7 @@ class PaintEnvionment:
 
     def load_data(self) -> None:
         # CelebA
-        for i in range(3000):
+        for i in range(50000):
             im_i = i + 1
             img_id = f"{im_i:06d}"
             try:
@@ -172,7 +172,9 @@ class FastPaintEnvironment:
 
     def get_dist(self):
         # TODO: Add type hints
-        return to_numpy((((self.env.gt.float() - self.env.canvas.float()) / 255) ** 2).mean(1).mean(1).mean(1))
+        return to_numpy(
+            (((self.env.target_image.float() - self.env.canvas.float()) / 255) ** 2).mean(1).mean(1).mean(1)
+        )
 
     def reset(self, test=False, episode=0) -> torch.Tensor:
         self.test = test
