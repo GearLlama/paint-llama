@@ -95,7 +95,7 @@ renderer_project = PythonProject(
 )
 root_project.add_task(
     "renderer:monitor",
-    exec="tensorboard --logdir=.logs/renderer",
+    exec="tensorboard --logdir=/mnt/f/paint_llama/renderer/logs",
     description=f"{TASK_FLAG} Monitor the training process",
 )
 root_project.add_task(
@@ -128,6 +128,7 @@ rl_painter_project = PythonProject(
         "scipy@^1.14.1",
         "Pillow@^11.0.0",
         "torch@2.5.1",
+        "torchvision@0.20.1",
     ],
 )
 

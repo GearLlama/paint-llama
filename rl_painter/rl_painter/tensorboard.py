@@ -4,7 +4,7 @@ import numpy as np
 from tensorboardX import SummaryWriter
 
 
-class TensorBoard:
+class Writer:
     def __init__(self, model_dir: str) -> None:
         self.summary_writer = SummaryWriter(model_dir)
 

@@ -1,6 +1,5 @@
 """Train neural renderer using strke drawing function."""
 
-import os
 import time
 
 import numpy as np
@@ -8,12 +7,14 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from renderer.tensorboard import TensorBoard
 from renderer.model import StrokeFCN
 from renderer.stroke import draw
+from renderer.tensorboard import TensorBoard
 
-LOGS_DIR = os.path.join(os.path.dirname(__file__), f"../../.logs/renderer/train/{str(int(time.time()))}")
-PKL_PATH = os.path.join(os.path.dirname(__file__), "../../.pkls/renderer/renderer.pkl")
+# TODO make configurable with pydantic settings
+BASE_DIR = "/mnt/f/paint_llama/renderer"
+LOGS_DIR = f"{BASE_DIR}/logs/train/{str(int(time.time()))}"
+PKL_PATH = f"{BASE_DIR}/pkls/renderer.pkl"
 BATCH_SIZE = 64
 
 

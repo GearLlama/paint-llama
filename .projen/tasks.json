@@ -157,7 +157,7 @@
       "description": "[PAINT_LLAMA] Monitor the training process",
       "steps": [
         {
-          "exec": "tensorboard --logdir=.logs/renderer"
+          "exec": "tensorboard --logdir=/mnt/d/paint_llama/renderer/logs"
         }
       ]
     },

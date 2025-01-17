@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 class StrokeFCN(nn.Module):
     def __init__(self) -> None:
-        super(StrokeFCN, self).__init__()
+        super().__init__()
         self.fc1 = nn.Linear(in_features=6, out_features=512)
         self.fc2 = nn.Linear(in_features=512, out_features=1024)
         self.fc3 = nn.Linear(in_features=1024, out_features=2048)

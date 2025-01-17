@@ -6,10 +6,10 @@ import torch
 class ReplayMemory:
     def __init__(self, buffer_size: int) -> None:
         self.buffer_size = buffer_size
-        self.buffer: List[torch.Tensor] = []
+        self.buffer: List[List[torch.Tensor]] = []
         self.index = 0
 
-    def append(self, obj: torch.Tensor) -> None:
+    def append(self, obj: List[torch.Tensor]) -> None:
         if self.size() > self.buffer_size:
             print("buffer size larger than set value, trimming...")
             self.buffer = self.buffer[(self.size() - self.buffer_size) :]
@@ -24,7 +24,7 @@ class ReplayMemory:
         return len(self.buffer)
 
     def sample_batch(
-        self, batch_size: int, device: int, only_state=False
+        self, batch_size: int, device: torch.device, only_state=False
     ) -> Union[Tuple[torch.Tensor, ...], torch.Tensor]:
         if self.size() < batch_size:
             batch = random.sample(self.buffer, self.size())

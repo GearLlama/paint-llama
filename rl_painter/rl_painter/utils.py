@@ -1,8 +1,11 @@
+import os
+
 import numpy as np
 import torch
 import torch.nn as nn
 
 USE_CUDA = torch.cuda.is_available()
+DEVICE = torch.device("cuda" if USE_CUDA else "cpu")
 
 
 def prRed(prt: str) -> None:

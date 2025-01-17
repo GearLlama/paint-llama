@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 
-def normal(x: float, width: int):
+def normal(x: float, width: int) -> float:
     return (int)(x * (width - 1) + 0.5)
 
 
@@ -12,7 +12,7 @@ def draw(
     command: np.typing.NDArray[np.float64],
     brush_radius: float = 0.05,
     width: int = 128,
-):
+) -> np.typing.NDArray[np.float32]:
     # Decompose command tuple
     x0, y0, x1, y1, x2, y2 = command
 
@@ -41,4 +41,4 @@ def draw(
         cv2.circle(canvas, center=(y, x), radius=z, color=1, thickness=-1)  # pylint: disable=no-member # type: ignore
 
     bitmap = cv2.resize(canvas, dsize=(width, width))  # pylint: disable=no-member
-    return 1 - bitmap
+    return 1 - bitmap  # type: ignore

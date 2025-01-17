@@ -1,43 +1,45 @@
+# TODO: In need of refactor - variables not propertly encapsulated
+from typing import Tuple
+
 import torch
 import torch.nn as nn
-from torch.optim import Adam
 from torch import autograd
 from torch.autograd import Variable
-import torch.nn.functional as F
-import torch.nn.utils.weight_norm as weight_norm
-from utils.util import *
+from torch.nn.utils.weight_norm import weight_norm
+from torch.optim import Adam
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-dim = 128
+from rl_painter.utils import DEVICE, hard_update, soft_update
+
+DIM = 128
 LAMBDA = 10  # Gradient penalty lambda hyperparameter
 
 
 class TReLU(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super(TReLU, self).__init__()
         self.alpha = nn.Parameter(torch.FloatTensor(1), requires_grad=True)
         self.alpha.data.fill_(0)
 
-    def forward(self, x):
-        x = F.relu(x - self.alpha) + self.alpha
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = nn.functional.relu(x - self.alpha) + self.alpha
         return x
 
 
 class Discriminator(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super(Discriminator, self).__init__()
 
-        self.conv0 = weightNorm(nn.Conv2d(6, 16, 5, 2, 2))
-        self.conv1 = weightNorm(nn.Conv2d(16, 32, 5, 2, 2))
-        self.conv2 = weightNorm(nn.Conv2d(32, 64, 5, 2, 2))
-        self.conv3 = weightNorm(nn.Conv2d(64, 128, 5, 2, 2))
-        self.conv4 = weightNorm(nn.Conv2d(128, 1, 5, 2, 2))
+        self.conv0 = weight_norm(nn.Conv2d(6, 16, 5, 2, 2))
+        self.conv1 = weight_norm(nn.Conv2d(16, 32, 5, 2, 2))
+        self.conv2 = weight_norm(nn.Conv2d(32, 64, 5, 2, 2))
+        self.conv3 = weight_norm(nn.Conv2d(64, 128, 5, 2, 2))
+        self.conv4 = weight_norm(nn.Conv2d(128, 1, 5, 2, 2))
         self.relu0 = TReLU()
         self.relu1 = TReLU()
         self.relu2 = TReLU()
         self.relu3 = TReLU()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.conv0(x)
         x = self.relu0(x)
         x = self.conv1(x)
@@ -47,32 +49,32 @@ class Discriminator(nn.Module):
         x = self.conv3(x)
         x = self.relu3(x)
         x = self.conv4(x)
-        x = F.avg_pool2d(x, 4)
+        x = nn.functional.avg_pool2d(x, 4)  # pylint: disable=not-callable # type: ignore
         x = x.view(-1, 1)
         return x
 
 
 netD = Discriminator()
 target_netD = Discriminator()
-netD = netD.to(device)
-target_netD = target_netD.to(device)
+netD = netD.to(DEVICE)
+target_netD = target_netD.to(DEVICE)
 hard_update(target_netD, netD)
 
 optimizerD = Adam(netD.parameters(), lr=3e-4, betas=(0.5, 0.999))
 
 
-def cal_gradient_penalty(netD, real_data, fake_data, batch_size):
+def cal_gradient_penalty(real_data: torch.Tensor, fake_data: torch.Tensor, batch_size: int) -> torch.Tensor:
     alpha = torch.rand(batch_size, 1)
     alpha = alpha.expand(batch_size, int(real_data.nelement() / batch_size)).contiguous()
-    alpha = alpha.view(batch_size, 6, dim, dim)
-    alpha = alpha.to(device)
-    fake_data = fake_data.view(batch_size, 6, dim, dim)
+    alpha = alpha.view(batch_size, 6, DIM, DIM)
+    alpha = alpha.to(DEVICE)
+    fake_data = fake_data.view(batch_size, 6, DIM, DIM)
     interpolates = Variable(alpha * real_data.data + ((1 - alpha) * fake_data.data), requires_grad=True)
     disc_interpolates = netD(interpolates)
     gradients = autograd.grad(
         disc_interpolates,
         interpolates,
-        grad_outputs=torch.ones(disc_interpolates.size()).to(device),
+        grad_outputs=torch.ones(disc_interpolates.size()).to(DEVICE),
         create_graph=True,
         retain_graph=True,
     )[0]
@@ -81,28 +83,29 @@ def cal_gradient_penalty(netD, real_data, fake_data, batch_size):
     return gradient_penalty
 
 
-def cal_reward(fake_data, real_data):
+def cal_reward(real_data: torch.Tensor, fake_data: torch.Tensor) -> torch.Tensor:
+    # TODO: What is returned here? A single dimension tensor?
     return target_netD(torch.cat([real_data, fake_data], 1))
 
 
-def save_gan(path):
+def save_gan(path: str) -> None:
     netD.cpu()
-    torch.save(netD.state_dict(), "{}/wgan.pkl".format(path))
-    netD.to(device)
+    torch.save(netD.state_dict(), f"{path}/wgan.pkl")
+    netD.to(DEVICE)
 
 
-def load_gan(path):
-    netD.load_state_dict(torch.load("{}/wgan.pkl".format(path)))
+def load_gan(path: str) -> None:
+    netD.load_state_dict(torch.load(f"{path}/wgan.pkl"))
 
 
-def update(fake_data, real_data):
+def update_gan(real_data: torch.Tensor, fake_data: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     fake_data = fake_data.detach()
     real_data = real_data.detach()
     fake = torch.cat([real_data, fake_data], 1)
     real = torch.cat([real_data, real_data], 1)
     D_real = netD(real)
     D_fake = netD(fake)
-    gradient_penalty = cal_gradient_penalty(netD, real, fake, real.shape[0])
+    gradient_penalty = cal_gradient_penalty(real, fake, real.shape[0])
     optimizerD.zero_grad()
     D_cost = D_fake.mean() - D_real.mean() + gradient_penalty
     D_cost.backward()

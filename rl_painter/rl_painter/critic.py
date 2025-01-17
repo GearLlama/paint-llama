@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import torch
 import torch.nn as nn
-import torch.nn.utils.weight_norm as weight_norm
+from torch.nn.utils.weight_norm import weight_norm
 
 
 def conv3x3(in_planes: int, out_planes: int, stride: int = 1) -> nn.Conv2d:
@@ -47,7 +47,7 @@ class BasicBlock(nn.Module):
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
             self.shortcut = nn.Sequential(  # type: ignore
-                weight_norm(  # pylint: disable=not-callable # type: ignore
+                weight_norm(
                     nn.Conv2d(
                         in_planes,
                         self.expansion * planes,
@@ -74,15 +74,9 @@ class Bottleneck(nn.Module):
 
     def __init__(self, in_planes: int, planes: int, stride: int = 1) -> None:
         super(Bottleneck, self).__init__()
-        self.conv1 = weight_norm(  # pylint: disable=not-callable # type: ignore
-            nn.Conv2d(in_planes, planes, kernel_size=1, bias=True)
-        )
-        self.conv2 = weight_norm(  # pylint: disable=not-callable # type: ignore
-            nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=True)
-        )
-        self.conv3 = weight_norm(  # pylint: disable=not-callable # type: ignore
-            nn.Conv2d(planes, self.expansion * planes, kernel_size=1, bias=True)
-        )
+        self.conv1 = weight_norm(nn.Conv2d(in_planes, planes, kernel_size=1, bias=True))
+        self.conv2 = weight_norm(nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=True))
+        self.conv3 = weight_norm(nn.Conv2d(planes, self.expansion * planes, kernel_size=1, bias=True))
         self.relu_1 = TReLU()
         self.relu_2 = TReLU()
         self.relu_3 = TReLU()
@@ -90,9 +84,7 @@ class Bottleneck(nn.Module):
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion * planes:
             self.shortcut = nn.Sequential(  # type: ignore
-                weight_norm(  # pylint: disable=not-callable # type: ignore
-                    nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=True)
-                ),
+                weight_norm(nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=True)),
             )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
