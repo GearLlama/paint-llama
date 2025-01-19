@@ -157,7 +157,7 @@
       "description": "[PAINT_LLAMA] Monitor the training process",
       "steps": [
         {
-          "exec": "tensorboard --logdir=/mnt/d/paint_llama/renderer/logs"
+          "exec": "tensorboard --logdir=/mnt/f/paint_llama/renderer/logs"
         }
       ]
     },
@@ -176,6 +176,24 @@
       "steps": [
         {
           "exec": "python renderer/renderer/train.py"
+        }
+      ]
+    },
+    "rl_painter:monitor": {
+      "name": "rl_painter:monitor",
+      "description": "[PAINT_LLAMA] Monitor the training process",
+      "steps": [
+        {
+          "exec": "tensorboard --logdir=/mnt/f/paint_llama/rl_painter/logs"
+        }
+      ]
+    },
+    "rl_painter:train": {
+      "name": "rl_painter:train",
+      "description": "[PAINT_LLAMA] Train the model",
+      "steps": [
+        {
+          "exec": "python rl_painter/rl_painter/train.py"
         }
       ]
     },

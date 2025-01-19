@@ -13,13 +13,13 @@ from rl_painter.agent import AgentDDPG
 from rl_painter.utils import prRed, prBlack
 
 BASE_DIR = "/mnt/f/paint_llama/rl_painter"
-LOGS_DIR = f"{BASE_DIR}/logs/train/{str(int(time.time()))}"
-PKLS_DIR = f"{BASE_DIR}/pkls/{str(int(time.time()))}"
+LOGS_DIR = f"{BASE_DIR}/logs/{str(int(time.time()))}"
+PKLS_DIR = f"{BASE_DIR}/pkls"
 
 WARMUP = 400
 DISCOUNT = 0.95**5
 BATCH_SIZE = 96
-RMSIZE = 800
+RMSIZE = 200
 ENV_BATCH = 96
 TAU = 0.001
 MAX_STEP = 40
@@ -49,7 +49,6 @@ def train(agent: AgentDDPG, env: FastPaintEnvironment, evaluator: Evaluator, wri
 
     # Start training
     while step <= train_times:
-        print("running step ", step)
         step += 1
         episode_steps += 1
 

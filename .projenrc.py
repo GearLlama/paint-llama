@@ -131,6 +131,16 @@ rl_painter_project = PythonProject(
         "torchvision@0.20.1",
     ],
 )
+root_project.add_task(
+    "rl_painter:train",
+    exec="python rl_painter/rl_painter/train.py",
+    description=f"{TASK_FLAG} Train the model",
+)
+root_project.add_task(
+    "rl_painter:monitor",
+    exec="tensorboard --logdir=/mnt/f/paint_llama/rl_painter/logs",
+    description=f"{TASK_FLAG} Monitor the training process",
+)
 
 root_project.synth()
 iac_project.synth()

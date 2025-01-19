@@ -153,9 +153,11 @@ class FastPaintEnvironment:
         if step == self.max_episode_length:
             for i in range(self.env_batch):
                 if self.env.imgid[i] < 50:
-                    gt = cv2.cvtColor((to_numpy(self.env.gt[i].permute(1, 2, 0))), cv2.COLOR_BGR2RGB)
+                    target_image = cv2.cvtColor(
+                        (to_numpy(self.env.target_image[i].permute(1, 2, 0))), cv2.COLOR_BGR2RGB
+                    )
                     canvas = cv2.cvtColor((to_numpy(self.env.canvas[i].permute(1, 2, 0))), cv2.COLOR_BGR2RGB)
-                    self.writer.add_image(str(self.env.imgid[i]) + "/_target.png", gt, log)
+                    self.writer.add_image(str(self.env.imgid[i]) + "/_target.png", target_image, log)
                     self.writer.add_image(str(self.env.imgid[i]) + "/_canvas.png", canvas, log)
 
     def step(self, action):
