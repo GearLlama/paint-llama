@@ -1,10 +1,10 @@
 {
-    "name": "Python",
+    "name": "Paint Llama",
     "build": {
         "dockerfile": "Dockerfile",
         "context": "..",
         "args": {
-            "VARIANT": "python:3.12.7",
+            "VARIANT": "python:3.12",
             "USERNAME": "vscode"
         }
     },
@@ -21,20 +21,20 @@
     },
     "runArgs": [
         "--cpus=8",
-        "--memory=15g"
+        "--memory=9g"
     ],
     "hostRequirements": {
-        "memory": "15gb",
+        "memory": "9gb",
         "cpus": 8
     },
     "initializeCommand": "mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.ssh && mkdir -p ${localEnv:HOME}${localEnv:USERPROFILE}/.aws",
     "updateContentCommand": "poetry update",
-    "postCreateCommand": "projen --no-post",
+    "postCreateCommand": "poetry update && projen --no-post",
     "postStartCommand": "aws sso login --profile $AWS_PROFILE --no-browser || (echo \"\nERROR: Setup AWS SSO with `${AWS_PROFILE}`.\n\" >&2 && exit 1)",
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker": {},
         "ghcr.io/devcontainers/features/aws-cli:1": {},
-        "ghcr.io/audacioustux/devcontainers/common-utils:2": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
             "configureZshAsDefaultShell": true,
             "installOhMyZsh": true,

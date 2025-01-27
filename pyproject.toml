@@ -9,7 +9,7 @@ readme = "README.md"
 
   [tool.poetry.dependencies]
   projen = "0.91.1"
-  python = "3.12.7"
+  python = "^3.12.7"
 
     [tool.poetry.dependencies.iac]
     path = "iac"

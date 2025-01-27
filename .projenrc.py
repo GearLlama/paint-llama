@@ -15,7 +15,7 @@ root_project = PythonProject(
     poetry=True,
     pytest=False,
     deps=[
-        "python@3.12.7",
+        "python@^3.12.7",
         "projen@0.91.1",
         "iac@{path = 'iac', develop = true}",
         "renderer@{path = 'renderer', develop = true}",
@@ -54,7 +54,7 @@ iac_project = PythonProject(
     outdir="iac",
     poetry=True,
     deps=[
-        "python@3.12.7",
+        "python@^3.12.7",
         "aws-cdk-lib@^2.167.1",
         "pydantic@^2.9.2",
         "pydantic-settings@^2.6.1",
@@ -81,7 +81,7 @@ renderer_project = PythonProject(
     outdir="renderer",
     poetry=True,
     deps=[
-        "python@3.12.7",
+        "python@^3.12.7",
         "pydantic@^2.9.2",
         "pydantic-settings@^2.6.1",
         "numpy@^2.2.0",
@@ -120,7 +120,7 @@ rl_painter_project = PythonProject(
     outdir="rl_painter",
     poetry=True,
     deps=[
-        "python@3.12.7",
+        "python@^3.12.7",
         "pydantic@^2.9.2",
         "pydantic-settings@^2.6.1",
         "numpy@^2.2.0",
